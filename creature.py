@@ -16,7 +16,7 @@ class Creature(ABC):
         self.health = initial_health
         self.max_health = max_health
         self.health_decay = health_decay
-        self.sight_range = 200  # 可视范围
+        self.sight_range = 200  # 初始值
         self.sight_angle = math.pi / 3  # 可视角度
         self.hearing_range = hearing_range  # 听觉范围
         self.selected = False  # 新增的
@@ -158,15 +158,12 @@ class Creature(ABC):
     def get_target(self, observed_predator, observed_prey, observed_food, observed_obstacle):
         pass
 
-    # def update_health(self):
-    #     self.health -= self.health_decay
-    #     if self.health <= 0:
-    #         self.health = 0
-    #     elif self.health > self.max_health:
-    #         self.health = self.max_health
-    @abstractmethod
     def update_health(self):
-        pass
+        self.health -= self.health_decay
+        if self.health <= 0:
+            self.health = 0
+        elif self.health > self.max_health:
+            self.health = self.max_health
 
     def draw(self, screen):
         pygame.draw.rect(screen, self.color, self.rect)

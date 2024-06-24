@@ -7,6 +7,7 @@ import constants
 class Predator(Creature):
     def __init__(self, x, y, size):
         super().__init__(x, y, size, (255, 0, 0), constants.PREDATOR_INITIAL_HEALTH, constants.PREDATOR_MAX_HEALTH, constants.PREDATOR_HEALTH_DECAY, constants.PREDATOR_HEARING_RANGE)
+        self.sight_range = constants.PREDATOR_SIGHT_RANGE  # 使用新的视觉范围
         self.prey_list = []
 
     def draw(self, screen):
@@ -107,7 +108,7 @@ class Predator(Creature):
 
     def update_health(self):
         # 基础的健康值减少
-        health_decay = self.health_decay
+        health_decay = self.health_decay * 2  # 将捕食者的生命值减少速度设置为猎物的两倍
 
         # 根据速度变化计算加速度
         accel_x = self.velocity[0] - self.previous_velocity[0]

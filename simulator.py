@@ -109,8 +109,8 @@ class Simulator:
 
     def generate_food(self):
         while True:
-            x = random.randint(constants.CONTROL_PANEL_WIDTH, self.screen_width - constants.FOOD_SIZE)
-            y = random.randint(0, self.screen_height - constants.FOOD_SIZE)
+            x = random.randint(constants.CENTER_AREA_X_START, constants.CENTER_AREA_X_START + constants.CENTER_AREA_WIDTH - constants.FOOD_SIZE)
+            y = random.randint(constants.CENTER_AREA_Y_START, constants.CENTER_AREA_Y_START + constants.CENTER_AREA_HEIGHT - constants.FOOD_SIZE)
             new_food = Food(x, y, constants.FOOD_SIZE)
             if not any(new_food.rect.colliderect(obs.rect) for obs in self.obstacles):
                 self.foods.append(new_food)

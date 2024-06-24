@@ -1,10 +1,11 @@
+# spawning.py
 import random
 import pygame
 from predator import Predator
 from prey import Prey
 from food import Food
 import constants
-# this is a test code
+
 def spawn_predator(obstacles, screen_width, screen_height):
     while True:
         x = random.randint(constants.CONTROL_PANEL_WIDTH, screen_width - constants.BLOCK_SIZE)
@@ -23,8 +24,8 @@ def spawn_prey(obstacles, screen_width, screen_height):
 
 def spawn_food(obstacles, screen_width, screen_height):
     while True:
-        x = random.randint(constants.CONTROL_PANEL_WIDTH, screen_width - constants.FOOD_SIZE)
-        y = random.randint(0, screen_height - constants.FOOD_SIZE)
+        x = random.randint(constants.CENTER_AREA_X_START, constants.CENTER_AREA_X_START + constants.CENTER_AREA_WIDTH - constants.FOOD_SIZE)
+        y = random.randint(constants.CENTER_AREA_Y_START, constants.CENTER_AREA_Y_START + constants.CENTER_AREA_HEIGHT - constants.FOOD_SIZE)
         food_rect = pygame.Rect(x, y, constants.FOOD_SIZE, constants.FOOD_SIZE)
         if not any(food_rect.colliderect(obs.rect) for obs in obstacles):
             return Food(x, y, constants.FOOD_SIZE)
