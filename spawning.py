@@ -4,7 +4,7 @@ from predator import Predator
 from prey import Prey
 from food import Food
 import constants
-#这里简单的测试一下
+
 def spawn_predator(obstacles, screen_width, screen_height):
     while True:
         x = random.randint(constants.CONTROL_PANEL_WIDTH, screen_width - constants.BLOCK_SIZE)

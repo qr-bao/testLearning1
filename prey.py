@@ -101,6 +101,25 @@ class Prey(Creature):
 
         return final_vector
 
+    def update_health(self):
+        # 基础的健康值减少
+        health_decay = self.health_decay
+
+        # 根据速度变化计算加速度
+        accel_x = self.velocity[0] - self.previous_velocity[0]
+        accel_y = self.velocity[1] - self.previous_velocity[1]
+        acceleration = math.sqrt(accel_x ** 2 + accel_y ** 2)
+        
+        # 根据加速度计算额外的健康值减少
+        health_decay += acceleration * constants.PREY_ACCELERATION_HEALTH_DECAY_FACTOR
+
+        self.health -= health_decay
+
+        if self.health <= 0:
+            self.health = 0
+        elif self.health > self.max_health:
+            self.health = self.max_health
+
     def eat_food(self, foods):
         for food in foods:
             if self.rect.colliderect(food.rect):
@@ -120,22 +139,3 @@ class Prey(Creature):
     def mutate(self):
         self.velocity[0] = random.choice([-1, 1])
         self.velocity[1] = random.choice([-1, 1])
-
-    def update_health(self):
-        # 基础的健康值减少
-        health_decay = self.health_decay
-
-        # 根据速度变化计算加速度
-        accel_x = self.velocity[0] - self.previous_velocity[0]
-        accel_y = self.velocity[1] - self.previous_velocity[1]
-        acceleration = math.sqrt(accel_x ** 2 + accel_y ** 2)
-        
-        # 根据加速度计算额外的健康值减少
-        health_decay += acceleration * constants.PREY_ACCELERATION_HEALTH_DECAY_FACTOR
-
-        self.health -= health_decay
-
-        if self.health <= 0:
-            self.health = 0
-        elif self.health > self.max_health:
-            self.health = self.max_health

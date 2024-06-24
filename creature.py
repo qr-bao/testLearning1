@@ -10,7 +10,8 @@ class Creature(ABC):
         self.rect = pygame.Rect(x, y, size, size)
         self.color = color
         self.original_color = color  # 保存原始颜色
-        self.velocity = [random.choice([-1, 1]), random.choice([-1, 1])]
+        angle = random.uniform(0, 2 * math.pi)
+        self.velocity = [math.cos(angle), math.sin(angle)]
         self.previous_velocity = self.velocity[:]  # 新增的
         self.health = initial_health
         self.max_health = max_health
@@ -157,12 +158,15 @@ class Creature(ABC):
     def get_target(self, observed_predator, observed_prey, observed_food, observed_obstacle):
         pass
 
+    # def update_health(self):
+    #     self.health -= self.health_decay
+    #     if self.health <= 0:
+    #         self.health = 0
+    #     elif self.health > self.max_health:
+    #         self.health = self.max_health
+    @abstractmethod
     def update_health(self):
-        self.health -= self.health_decay
-        if self.health <= 0:
-            self.health = 0
-        elif self.health > self.max_health:
-            self.health = self.max_health
+        pass
 
     def draw(self, screen):
         pygame.draw.rect(screen, self.color, self.rect)
