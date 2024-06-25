@@ -61,7 +61,7 @@ SLOW_FPS = 10
 # 遗传算法相关
 MUTATION_CHANCE = 0.01  # 增加突变几率
 PREY_REPRODUCTION_CHANCE = 0.05  # 增加猎物繁殖几率
-PREDATOR_REPRODUCTION_CHANCE = 0.030  # 增加捕食者繁殖几率
+PREDATOR_REPRODUCTION_CHANCE = 0.035  # 增加捕食者繁殖几率
 PREDATOR_SPEED = 5
 
 # 速度和加速度
@@ -95,3 +95,6 @@ PREY_TURN_INTERVAL = 30  # 定期回头观察的间隔（帧数）
 # 视觉范围
 PREDATOR_SIGHT_RANGE = 400  # 捕食者的视觉范围
 PREY_SIGHT_RANGE = 400  # 猎物的视觉范围
+
+# 最大迭代次数
+MAX_ITERATIONS = 10000  # 设置为一个合理的值以控制运行时间
