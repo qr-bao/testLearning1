@@ -15,6 +15,7 @@ class Simulator:
         self.foods = []
         self.obstacles = []
         self.selected_agent = None
+        self.dead_predator_count = 0  # 新增变量记录死亡的捕食者数量
 
     def initialize(self):
         self.initialize_obstacles()
@@ -52,39 +53,55 @@ class Simulator:
         for _ in range(constants.NUM_FOOD):
             self.generate_food()
 
-    def breedPrey(self):
-        if not self.prey:
+    def breedPrey(self, prey):
+        if prey.iteration_counter < constants.REPRODUCTION_ITERATION_THRESHOLD:
+            return
+        if prey.health < constants.PREY_MIN_HEALTH_FOR_REPRODUCTION:
+            return
+        if random.random() > constants.PREY_REPRODUCTION_PROBABILITY:
             return
 
-        preyHealth = [p.health for p in self.prey]
-        
-        parent1, parent2 = random.choices(self.prey, weights=preyHealth, k=2)
-        child = parent1.crossbreed(parent2)
-        if random.random() < constants.MUTATION_CHANCE:
-            child.mutate()
-        
-        self.ensure_no_collision(child)
-        self.prey.append(child)
-    
-    def breedPredator(self):
-        if not self.predators:
+        other_prey = random.choice(self.prey)
+        if other_prey.health >= constants.PREY_MIN_HEALTH_FOR_REPRODUCTION:
+            child = prey.crossbreed(other_prey)
+            if random.random() < constants.MUTATION_CHANCE:
+                child.mutate()
+            self.ensure_no_collision(child)
+            self.prey.append(child)
+
+    def breedPredator(self, predator):
+        if predator.iteration_counter < constants.REPRODUCTION_ITERATION_THRESHOLD:
+            return
+        if predator.health < constants.PREDATOR_MIN_HEALTH_FOR_REPRODUCTION:
+            return
+        if random.random() > constants.PREDATOR_REPRODUCTION_PROBABILITY:
             return
 
-        predHealth = [p.health for p in self.predators]
-        
-        parent1, parent2 = random.choices(self.predators, weights=predHealth, k=2)
-        child = parent1.crossbreed(parent2)
-        if random.random() < constants.MUTATION_CHANCE:
-            child.mutate()
-        
-        self.ensure_no_collision(child)
-        self.predators.append(child)
+        other_predator = random.choice(self.predators)
+        if other_predator.health >= constants.PREDATOR_MIN_HEALTH_FOR_REPRODUCTION:
+            child = predator.crossbreed(other_predator)
+            if random.random() < constants.MUTATION_CHANCE:
+                child.mutate()
+            self.ensure_no_collision(child)
+            self.predators.append(child)
 
     def applyGeneticAlgorithm(self):
-        if random.random() < constants.PREY_REPRODUCTION_CHANCE:
-            self.breedPrey()
-        if random.random() < constants.PREDATOR_REPRODUCTION_CHANCE:
-            self.breedPredator()
+        new_prey_born = 0
+        new_predator_born = 0
+
+        for prey in self.prey:
+            initial_prey_count = len(self.prey)
+            self.breedPrey(prey)
+            if len(self.prey) > initial_prey_count:
+                new_prey_born += 0
+
+        for predator in self.predators:
+            initial_predator_count = len(self.predators)
+            self.breedPredator(predator)
+            if len(self.predators) > initial_predator_count:
+                new_predator_born += 1
+
+        return new_prey_born, new_predator_born
 
     def generate_agent(self):
         self.applyGeneticAlgorithm()
@@ -140,12 +157,15 @@ class Simulator:
             predator.env_food = self.foods
             predator.env_obstacles = self.obstacles
             self.move_predator(predator)
+            predator.increment_iteration()  # 增加迭代计数器
+
         for prey in self.prey:
             prey.env_predators = self.predators
             prey.env_prey = self.prey
             prey.env_food = self.foods
             prey.env_obstacles = self.obstacles
             self.move_prey(prey)
+            prey.increment_iteration()  # 增加迭代计数器
 
     def move_prey(self, prey):
         prey.move(constants.CONTROL_PANEL_WIDTH, self.screen_width, self.screen_height, self.obstacles)

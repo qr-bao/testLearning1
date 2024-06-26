@@ -20,7 +20,11 @@ class Creature(ABC):
         self.sight_angle = math.pi / 3  # 可视角度
         self.hearing_range = hearing_range  # 听觉范围
         self.selected = False  # 新增的
-
+        self.iteration_counter = 0  # 新增的迭代计数器
+    
+    def increment_iteration(self):
+        self.iteration_counter += 1
+    
     def draw_sight_range(self, screen):
         end_x = self.rect.centerx + self.sight_range * math.cos(math.atan2(self.velocity[1], self.velocity[0]))
         end_y = self.rect.centery + self.sight_range * math.sin(math.atan2(self.velocity[1], self.velocity[0]))

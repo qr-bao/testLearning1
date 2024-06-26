@@ -1,3 +1,4 @@
+# main.py
 import pygame
 import random
 import matplotlib.pyplot as plt
@@ -45,6 +46,8 @@ iteration_count = 0
 # 初始化数据记录结构
 prey_counts = []
 predator_counts = []
+prey_born_count = 0
+predator_born_count = 0
 
 # 创建图表
 fig, ax = plt.subplots(figsize=(3, 2))  # 设置图表尺寸适应侧边栏
@@ -116,15 +119,24 @@ while running:
 
     elif game_state == constants.IN_GAME:
         sim.check_events()
-        sim.remove_dead()
-        sim.applyGeneticAlgorithm()
         sim.add_food()
         sim.move_models()
-        sim.draw_models(screen)
         sim.prey_hunt()
         sim.predator_hunt()
         sim.decrease_health()  # 更新健康值
+        sim.remove_dead()  # 清理死亡个体
         iteration_count += 1  # 增加迭代计数器
+        sim.draw_models(screen)
+
+        # 每100个回合输出日志
+        if iteration_count % 10 == 0:
+            new_prey_born, new_predator_born = sim.applyGeneticAlgorithm()
+            # prey_born_count += new_prey_born
+            # predator_born_count += new_predator_born
+            # print(f"Iteration {iteration_count}: Current Predators: {len(sim.predators)}, New Predators Born: {predator_born_count}, Predators Died: {sim.dead_predator_count}")
+            # prey_born_count = 0
+            # predator_born_count = 0
+            # sim.dead_predator_count = 0  # 重置死亡捕食者计数
 
         # 更新数据记录结构
         prey_counts.append(len(sim.prey))

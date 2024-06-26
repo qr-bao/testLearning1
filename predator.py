@@ -1,9 +1,7 @@
-# predator.py
-import random
 import math
 from creature import Creature
 import constants
-
+import random
 class Predator(Creature):
     def __init__(self, x, y, size):
         super().__init__(x, y, size, (255, 0, 0), constants.PREDATOR_INITIAL_HEALTH, constants.PREDATOR_MAX_HEALTH, constants.PREDATOR_HEALTH_DECAY, constants.PREDATOR_HEARING_RANGE)
